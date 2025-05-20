@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BancoDreams - Su Banco de Confianza</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://img.freepik.com/vector-gratis/fondo-tecnologia-digital-alambre-malla-red_1017-27428.jpg?semt=ais_hybrid&w=740');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .card {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 80%;
+            max-width: 900px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #002054;
+            margin-bottom: 20px;
+        }
+        
+        p {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+        }
+        
+        .btn-primary {
+            background-color: #002054;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #003380;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 32, 84, 0.3);
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #002054;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .footer {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: rgb(173, 119, 119);
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">BancoDreams</a>
+        <div class="nav-links">
+            <a href="#" class="nav-link">Inicio</a>
+            <a href="#" class="nav-link">Servicios</a>
+            <a href="#" class="nav-link">Contacto</a>
+            <a href="login.html" class="nav-link">Personas</a>
+        </div>
+    </nav>
+    
+    <div class="content">
+        <div class="card">
+            <h1>Bienvenido a BancoDreams</h1>
+            <p>En BancoDreams, estamos comprometidos a proporcionar servicios financieros de alta calidad para satisfacer todas sus necesidades. Nuestro enfoque innovador y centrado en el cliente nos distingue como su socio financiero de confianza.</p>
+            <div class="cta-buttons">
+                <a href="login.html" class="btn btn-primary">Acceso Clientes</a>
+                <a href="#" class="btn btn-secondary">Abrir Cuenta</a>
+                <a href="#" class="btn btn-secondary">Nuestros Servicios</a>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        &copy; 2025 BancoDreams. Todos los derechos reservados.
+    </footer>
+</body>
+</html>

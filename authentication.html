@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BancoDreams - Autenticación</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://t3.ftcdn.net/jpg/03/55/60/70/360_F_355607062_zYMS8jaz4SfoykpWz5oViRVKL32IabTP.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .auth-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+        }
+        
+        h2 {
+            color: #002054;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        label {
+            width: 180px;
+            margin-right: 10px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #002054;
+            box-shadow: 0 0 5px rgba(0, 32, 84, 0.3);
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #002054;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #003380;
+        }
+        
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: #002054;
+            margin-left: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .footer {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 10px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .image-item {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .image-item:hover {
+            border-color: #002054;
+            transform: scale(1.05);
+        }
+        
+        .image-item.selected {
+            border-color: #002054;
+            background-color: rgba(0, 32, 84, 0.1);
+        }
+        
+        .image-item img {
+            max-width: 100%;
+            height: 60px;
+            object-fit: contain;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: #002054;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .submit-btn:hover {
+            background-color: #003380;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">BancoDreams</a>
+    </nav>
+    
+    <div class="content">
+        <div class="auth-container">
+            <h2 id="welcome-message">Hola, Usuario</h2>
+            <div id="error-message" class="error-message"></div>
+            
+            <div class="form-group">
+                <label id="question-label">Pregunta de seguridad:</label>
+                <input type="text" id="security-answer" placeholder="Ingrese su respuesta">
+                <button type="button" class="btn btn-secondary" id="change-question-btn">Cambiar</button>
+            </div>
+            
+            <p>Seleccione la imagen que eligió al registrarse:</p>
+            <div class="image-grid" id="image-grid">
+                <!-- Las imágenes se cargarán dinámicamente aquí -->
+            </div>
+            
+            <button type="button" class="submit-btn" id="submit-btn">Ingresar</button>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        &copy; 2025 BancoDreams. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        // Obtener ID de usuario de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const userId = urlParams.get('userId');
+        const userName = urlParams.get('userName');
+        let preguntaIndex = 0;
+        let imagenes = [];
+        let imagenCorrecta = '';
+        const apiUrl = 'http://localhost:5000';
+        
+        // Verificar si tenemos un ID de usuario
+        if (!userId) {
+            window.location.href = 'login.html';
+        }
+        
+        // Actualizar el mensaje de bienvenida con el nombre del usuario
+        document.getElementById('welcome-message').textContent = `Hola, ${userName || 'Usuario'}`;
+        
+        // Función para mostrar mensajes de error
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Función para cargar una pregunta de seguridad
+        async function loadSecurityQuestion() {
+            try {
+                const response = await fetch(`${apiUrl}/get_security_question/${userId}`);
+                const data = await response.json();
+                
+                // Guardar los datos para la verificación
+                preguntaIndex = data.pregunta_index;
+                imagenes = data.imagenes;
+                imagenCorrecta = data.imagen_correcta;
+                
+                // Mostrar la pregunta
+                document.getElementById('question-label').textContent = `Pregunta de seguridad: ${data.pregunta}`;
+                
+                // Generar la cuadrícula de imágenes
+                const imageGrid = document.getElementById('image-grid');
+                imageGrid.innerHTML = '';
+                
+                data.imagenes.forEach((imagen, index) => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    imageItem.dataset.image = imagen;
+                    
+                    const img = document.createElement('img');
+                    img.src = imagen;
+                    img.alt = `Imagen ${index + 1}`;
+                    
+                    imageItem.appendChild(img);
+                    imageGrid.appendChild(imageItem);
+                    
+                    // Agregar evento de clic para seleccionar imagen
+                    imageItem.addEventListener('click', function() {
+                        // Quitar selección de todas las imágenes
+                        document.querySelectorAll('.image-item').forEach(item => {
+                            item.classList.remove('selected');
+                        });
+                        
+                        // Seleccionar esta imagen
+                        this.classList.add('selected');
+                    });
+                });
+            } catch (error) {
+                console.error('Error al cargar la pregunta de seguridad:', error);
+                showError('Error al conectar con el servidor. Inténtelo de nuevo más tarde.');
+            }
+        }
+        
+        // Función para verificar la segunda etapa de autenticación
+        async function verifySecondFactor() {
+            const respuesta = document.getElementById('security-answer').value;
+            const imagenSeleccionada = document.querySelector('.image-item.selected')?.dataset.image;
+            
+            if (!respuesta) {
+                showError('Por favor, responda la pregunta de seguridad');
+                return;
+            }
+            
+            if (!imagenSeleccionada) {
+                showError('Por favor, seleccione una imagen');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${apiUrl}/verify_second_factor`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        user_id: userId,
+                        pregunta_index: preguntaIndex,
+                        respuesta: respuesta,
+                        imagen: imagenSeleccionada
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Redirigir a la página de estado de cuenta
+                    window.location.href = `account.html?userId=${userId}`;
+                } else {
+                    showError(data.message || 'Verificación fallida. Por favor, inténtelo de nuevo.');
+                }
+            } catch (error) {
+                console.error('Error en la verificación:', error);
+                showError('Error al conectar con el servidor. Inténtelo de nuevo más tarde.');
+            }
+        }
+        
+        // Asignar eventos
+        document.getElementById('change-question-btn').addEventListener('click', loadSecurityQuestion);
+        document.getElementById('submit-btn').addEventListener('click', verifySecondFactor);
+        
+        // Cargar la primera pregunta al cargar la página
+        window.addEventListener('DOMContentLoaded', loadSecurityQuestion);
+    </script>
+</body>
+</html>

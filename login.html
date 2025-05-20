@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BancoDreams - Iniciar Sesión</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt/bin/jsencrypt.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://t4.ftcdn.net/jpg/03/57/34/39/360_F_357343965_u58BFcRrziBVMqgt6liwPHJKcIjHsPnc.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .navbar {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        h2 {
+            color: #002054;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #002054;
+            box-shadow: 0 0 5px rgba(0, 32, 84, 0.3);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 5px;
+            border: none;
+            background-color: #002054;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #003380;
+        }
+        
+        .footer {
+            background-color: rgba(0, 32, 84, 0.9);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #002054;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        .error-message {
+            color: #d9534f;
+            text-align: center;
+            margin-bottom: 15px;
+            display: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/jsencrypt@3.3.2/dist/jsencrypt.min.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="index.html" class="logo">BancoDreams</a>
+    </nav>
+    
+    <div class="content">
+        <div class="login-container">
+            <h2>Iniciar Sesión</h2>
+            <div id="error-message" class="error-message"></div>
+            <div class="form-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="button" class="btn" id="login-btn">Ingresar</button>
+            <a href="index.html" class="back-link">Volver al inicio</a>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        &copy; 2025 BancoDreams. Todos los derechos reservados.
+    </footer>
+
+    <script>
+        // Variable global para almacenar el ID del usuario
+        let userId = null;
+        let userName = null;
+        const apiUrl = 'http://localhost:5000';
+        
+        // Función para mostrar mensajes de error
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Función para encriptar la contraseña con RSA
+        async function encryptPassword(password) {
+            try {
+                // Obtener la clave pública del servidor
+                const response = await fetch(`${apiUrl}/get_public_key`);
+                const data = await response.json();
+                const publicKey = data.public_key;
+                
+                // Encriptar la contraseña con la clave pública
+                const encrypt = new JSEncrypt();
+                encrypt.setPublicKey(publicKey);
+                const encrypted = encrypt.encrypt(password);
+                
+                return encrypted;
+            } catch (error) {
+                console.error('Error al encriptar la contraseña:', error);
+                showError('Error al procesar la contraseña. Inténtelo de nuevo.');
+                return null;
+            }
+        }
+        
+        // Función para iniciar sesión
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showError('Por favor, complete todos los campos');
+                return;
+            }
+            
+            try {
+                // Encriptar la contraseña antes de enviarla
+                const encryptedPassword = await encryptPassword(password);
+                if (!encryptedPassword) return;
+                
+                // Enviar solicitud de inicio de sesión
+                const response = await fetch(`${apiUrl}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: encryptedPassword
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Guardar el ID del usuario para la siguiente etapa
+                    userId = data.user_id;
+                    userName = data.nombre;
+                    
+                    // Redirigir a la página de autenticación secundaria
+                    window.location.href = `authentication.html?userId=${userId}&userName=${encodeURIComponent(userName)}`;
+                } else {
+                    showError(data.message || 'Usuario o contraseña incorrectos');
+                }
+            } catch (error) {
+                console.error('Error al iniciar sesión:', error);
+                showError('Error al conectar con el servidor. Inténtelo de nuevo más tarde.');
+            }
+        }
+        
+        // Asignar evento al botón de inicio de sesión
+        document.getElementById('login-btn').addEventListener('click', login);
+        
+        // Permitir iniciar sesión presionando Enter
+        document.getElementById('password').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                login();
+            }
+        });
+    </script>
+</body>
+</html>
