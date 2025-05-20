@@ -13,4 +13,5 @@ Instala las siguientes dependencias ejecutando:
   pip install flask flask-cors psycopg2-binary rsa cryptography
 Ejecutar el servidor:
   python backend.py
-PARA LA VISTA EJECUTARR INDEX.HTML EN VISUAL STUDIO CODE
+
+📌 PARA LA VISTA EJECUTARR INDEX.HTML EN VISUAL STUDIO CODE
